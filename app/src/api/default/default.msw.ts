@@ -6,8 +6,8 @@
  */
 import { faker } from '@faker-js/faker'
 
-import { HttpResponse, http } from 'msw'
 import type { RequestHandlerOptions } from 'msw'
+import { HttpResponse, http } from 'msw'
 
 import type { Analytics, Department, Tool, User, UserTool } from '../model'
 
