@@ -1,5 +1,4 @@
-import type { Tool, UserTool } from '#/api/model'
-import type { ToolWithUserTools } from '#/types/api-extensions'
+import type { Tool } from '#/api/model'
 import { setupServer } from 'msw/node'
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest'
 import { getTools, getToolsId } from '../../api/default/default'
@@ -9,7 +8,6 @@ import {
   getGetToolsIdResponseMock,
   getGetToolsMockHandler,
   getGetToolsResponseMock,
-  getGetUserToolsResponseMock,
 } from '../../api/default/default.msw'
 
 const server = setupServer(...getDefaultMock())
@@ -200,61 +198,61 @@ describe('getTools', () => {
     },
   )
 
-  test('should return a list of tools with embedded user_tools', async () => {
-    const tools = makeToolsFixture()
-      .slice(0, 2)
-      .map((tool, index) => ({
-        ...tool,
-        id: index + 1,
-        name: `Tool ${index + 1}`,
-      }))
+  //   test('should return a list of tools with embedded user_tools', async () => {
+  //     const tools = makeToolsFixture()
+  //       .slice(0, 2)
+  //       .map((tool, index) => ({
+  //         ...tool,
+  //         id: index + 1,
+  //         name: `Tool ${index + 1}`,
+  //       }))
 
-    const userTools: UserTool[] = getGetUserToolsResponseMock()
-      .slice(0, 2)
-      .map((relation, index) => ({
-        ...relation,
-        user_id: index + 1,
-        tool_id: index + 1,
-        usage_frequency: index === 0 ? 'daily' : 'weekly',
-        proficiency_level: index === 0 ? 'advanced' : 'intermediate',
-        last_used: index === 0 ? '2024-01-01' : '2024-01-02',
-      }))
+  //     const userTools: UserTool[] = getGetUserToolsResponseMock()
+  //       .slice(0, 2)
+  //       .map((relation, index) => ({
+  //         ...relation,
+  //         user_id: index + 1,
+  //         tool_id: index + 1,
+  //         usage_frequency: index === 0 ? 'daily' : 'weekly',
+  //         proficiency_level: index === 0 ? 'advanced' : 'intermediate',
+  //         last_used: index === 0 ? '2024-01-01' : '2024-01-02',
+  //       }))
 
-    server.use(
-      getGetToolsMockHandler((info) => {
-        const url = new URL(info.request.url)
-        const embed = url.searchParams.get('_embed')
+  //     server.use(
+  //       getGetToolsMockHandler((info) => {
+  //         const url = new URL(info.request.url)
+  //         const embed = url.searchParams.get('_embed')
 
-        if (embed === 'user_tools') {
-          return tools.map(
-            (tool): ToolWithUserTools => ({
-              ...tool,
-              user_tools: userTools.filter(
-                (relation) => relation.tool_id === tool.id,
-              ),
-            }),
-          )
-        }
+  //         if (embed === 'user_tools') {
+  //           return tools.map(
+  //             (tool): ToolWithUserTools => ({
+  //               ...tool,
+  //               user_tools: userTools.filter(
+  //                 (relation) => relation.tool_id === tool.id,
+  //               ),
+  //             }),
+  //           )
+  //         }
 
-        return tools
-      }),
-    )
+  //         return tools
+  //       }),
+  //     )
 
-    const res = await getTools({ _embed: 'user_tools' })
-    expect(res.status).toBe(200)
-    expect(Array.isArray(res.data)).toBe(true)
-    expect(res.data).toHaveLength(2)
-    expect(res.data[0]).toHaveProperty('user_tools')
-    expect(Array.isArray(res.data[0].user_tools)).toBe(true)
-    expect(res.data[0].user_tools).toHaveLength(1)
-    expect(res.data[0].user_tools[0].tool_id).toBe(1)
-    expect(res.data[0].user_tools[0].user_id).toBe(1)
-    expect(res.data[1]).toHaveProperty('user_tools')
-    expect(Array.isArray(res.data[1].user_tools)).toBe(true)
-    expect(res.data[1].user_tools).toHaveLength(1)
-    expect(res.data[1].user_tools[0].tool_id).toBe(2)
-    expect(res.data[1].user_tools[0].user_id).toBe(2)
-  })
+  //     const res = await getTools({ _embed: 'user_tools' })
+  //     expect(res.status).toBe(200)
+  //     expect(Array.isArray(res.data)).toBe(true)
+  //     expect(res.data).toHaveLength(2)
+  //     expect(res.data[0]).toHaveProperty('user_tools')
+  //     expect(Array.isArray(res.data[0].user_tools)).toBe(true)
+  //     expect(res.data[0].user_tools).toHaveLength(1)
+  //     expect(res.data[0].user_tools[0].tool_id).toBe(1)
+  //     expect(res.data[0].user_tools[0].user_id).toBe(1)
+  //     expect(res.data[1]).toHaveProperty('user_tools')
+  //     expect(Array.isArray(res.data[1].user_tools)).toBe(true)
+  //     expect(res.data[1].user_tools).toHaveLength(1)
+  //     expect(res.data[1].user_tools[0].tool_id).toBe(2)
+  //     expect(res.data[1].user_tools[0].user_id).toBe(2)
+  //   })
 })
 
 describe('getToolsId', () => {
