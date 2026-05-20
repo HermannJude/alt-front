@@ -1,0 +1,421 @@
+openapi: 3.0.3
+info:
+  title: Alt Front JSON Server API
+  version: 1.0.0
+servers:
+  - url: https://tt-jsonserver-01.alt-tools.tech/
+
+paths:
+  /departments:
+    get:
+      summary: List departments
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/order'
+      responses:
+        '200':
+          description: Array of departments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Department'
+    post:
+      summary: Create department
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartmentCreate'
+      responses:
+        '201':
+          description: Created
+
+  /departments/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Get department by id
+      responses:
+        '200':
+          description: Department
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Department'
+    put:
+      summary: Update department
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DepartmentCreate'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete department
+      responses:
+        '204':
+          description: Deleted
+
+  /users:
+    get:
+      summary: List users
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - name: active
+          in: query
+          schema:
+            type: boolean
+        - name: name_like
+          in: query
+          schema:
+            type: string
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/order'
+        - name: department_id
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Array of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Create user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '201':
+          description: Created
+
+  /users/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Get user by id
+      responses:
+        '200':
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      summary: Update user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete user
+      responses:
+        '204':
+          description: Deleted
+
+  /tools:
+    get:
+      summary: List tools
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/order'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, unused, expiring]
+        - name: name_like
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Array of tools
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tool'
+    post:
+      summary: Create tool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToolCreate'
+      responses:
+        '201':
+          description: Created
+
+  /tools/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Get tool by id
+      responses:
+        '200':
+          description: Tool
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tool'
+    put:
+      summary: Update tool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToolCreate'
+      responses:
+        '200':
+          description: Updated
+    delete:
+      summary: Delete tool
+      responses:
+        '204':
+          description: Deleted
+
+  /user_tools:
+    get:
+      summary: List user_tool relations
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - name: user_id
+          in: query
+          schema:
+            type: integer
+        - name: tool_id
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Array of user_tool
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserTool'
+
+  /analytics:
+    get:
+      summary: Analytics and KPIs
+      responses:
+        '200':
+          description: Analytics object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Analytics'
+
+components:
+  parameters:
+    page:
+      name: _page
+      in: query
+      schema:
+        type: integer
+        default: 1
+      description: Page number (json-server style)
+    limit:
+      name: _limit
+      in: query
+      schema:
+        type: integer
+        default: 10
+      description: Page size
+    sort:
+      name: _sort
+      in: query
+      schema:
+        type: string
+      description: Field to sort by
+    order:
+      name: _order
+      in: query
+      schema:
+        type: string
+        enum: [asc, desc]
+      description: Sort order
+
+  schemas:
+    Department:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required: [id, name]
+
+    DepartmentCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        department_id:
+          type: integer
+        role:
+          type: string
+        active:
+          type: boolean
+        joined_at:
+          type: string
+          format: date
+      required: [id, name, email]
+
+    UserCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        department_id:
+          type: integer
+        role:
+          type: string
+        active:
+          type: boolean
+
+    Tool:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        vendor:
+          type: string
+        category:
+          type: string
+        monthly_cost:
+          type: number
+        previous_month_cost:
+          type: number
+        owner_department:
+          type: string
+        status:
+          type: string
+          enum: [active, unused, expiring]
+        website_url:
+          type: string
+        active_users_count:
+          type: integer
+        icon_url:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required: [id, name, status]
+
+    ToolCreate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        vendor:
+          type: string
+        category:
+          type: string
+        monthly_cost:
+          type: number
+        owner_department:
+          type: string
+        status:
+          type: string
+
+    UserTool:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        tool_id:
+          type: integer
+        usage_frequency:
+          type: string
+          enum: [daily, weekly, monthly, rarely]
+        last_used:
+          type: string
+          format: date-time
+        proficiency_level:
+          type: string
+          enum: [beginner, intermediate, advanced, expert]
+
+    Analytics:
+      type: object
+      properties:
+        budget_overview:
+          type: object
+        kpi_trends:
+          type: object
+        cost_analytics:
+          type: object
