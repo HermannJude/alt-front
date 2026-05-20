@@ -8,7 +8,7 @@ import {
   getGetToolsMockHandler,
 } from '../../api/default/default.msw'
 
-const server = setupServer(...getDefaultMock([]))
+const server = setupServer(...getDefaultMock())
 
 beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())

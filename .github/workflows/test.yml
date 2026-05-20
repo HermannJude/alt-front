@@ -2,12 +2,17 @@ name: Tests
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - "feature/**"
+      - "fix/**"
+      - "tests/**"
   pull_request:
     branches:
       - main
       - "feature/**"
       - "fix/**"
+      - "tests/**"
 jobs:
   test:
     runs-on: ubuntu-latest

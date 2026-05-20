@@ -3,7 +3,7 @@ import { setupServer } from 'msw/node'
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest'
 import { getDefaultMock } from '../../api/default/default.msw'
 
-const server = setupServer(...getDefaultMock([]))
+const server = setupServer(...getDefaultMock())
 
 beforeAll(() => server.listen())
 afterEach(() => server.resetHandlers())
