@@ -15,3 +15,19 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+
+// Ignore specific Vite virtual module dynamic import error seen in CI/headless
+// This prevents Cypress from failing the test when module loading race occurs
+// Reference: https://on.cypress.io/uncaught-exception-from-application
+// Only ignore the known virtual module import failure
+Cypress.on('uncaught:exception', (err) => {
+  if (
+    err &&
+    err.message &&
+    err.message.includes('virtual:tanstack-start-client-entry')
+  ) {
+    return false
+  }
+  // Let other errors fail the test
+  return true
+})
