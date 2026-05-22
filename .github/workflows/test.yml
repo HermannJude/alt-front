@@ -46,6 +46,10 @@ jobs:
       - name: Run tests
         run: pnpm test
 
+      - name: Add .env file
+        run: |
+          cp app/.env.example app/.env
+
       - name: Cypress run
         uses: cypress-io/github-action@v7
         with:
