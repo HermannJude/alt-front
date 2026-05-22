@@ -6,11 +6,9 @@ import { setupServer } from 'msw/node'
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest'
 import {
   getDefaultMock,
-  getGetDepartmentsResponseMock,
   getGetUsersMockHandler,
   getGetUsersResponseMock,
   getGetUserToolsMockHandler,
-  getGetUserToolsResponseMock,
 } from '../../api/default/default.msw'
 
 const server = setupServer(...getDefaultMock())
@@ -116,14 +114,13 @@ describe('getUsers', () => {
   test('should return a list of users with their department information', async () => {
     const users: UserWithDepartment[] = makeUsersFixture()
 
-    const departments: Department[] = getGetDepartmentsResponseMock()
-      .slice(0, 2)
-      .map((department, index) => ({
-        ...department,
+    const departments: Department[] = Array.from({ length: 2 }).map(
+      (_, index) => ({
         id: index + 1,
         name: `Department ${index + 1}`,
         description: `Description ${index + 1}`,
-      }))
+      }),
+    )
 
     server.use(
       getGetUsersMockHandler((info) => {
@@ -156,16 +153,15 @@ describe('getUsers', () => {
 
 describe('getUserById', () => {
   test('should return user tools for user', async () => {
-    const userTools: UserTool[] = getGetUserToolsResponseMock()
-      .slice(0, 1)
-      .map((relation) => ({
-        ...relation,
+    const userTools: UserTool[] = [
+      {
         user_id: 1,
         tool_id: 1,
         usage_frequency: 'daily',
         last_used: '2023-01-01',
         proficiency_level: 'advanced',
-      }))
+      },
+    ]
 
     server.use(
       getGetUserToolsMockHandler((info) => {

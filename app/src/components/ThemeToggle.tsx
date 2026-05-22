@@ -32,12 +32,14 @@ function applyThemeMode(mode: ThemeMode) {
 }
 
 export default function ThemeToggle() {
+  const [mounted, setMounted] = useState(false)
   const [mode, setMode] = useState<ThemeMode>('auto')
 
   useEffect(() => {
     const initialMode = getInitialMode()
     setMode(initialMode)
     applyThemeMode(initialMode)
+    setMounted(true)
   }, [])
 
   useEffect(() => {
@@ -61,6 +63,8 @@ export default function ThemeToggle() {
     applyThemeMode(nextMode)
     window.localStorage.setItem('theme', nextMode)
   }
+
+  if (!mounted) return null
 
   const label =
     mode === 'auto'

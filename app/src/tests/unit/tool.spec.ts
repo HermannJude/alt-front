@@ -1,5 +1,4 @@
 import type { Tool, UserTool } from '#/api/model'
-import type { ToolWithUserTools } from '#/types/api-extensions'
 import { setupServer } from 'msw/node'
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest'
 import { getTools, getToolsId } from '../../api/default/default'
@@ -9,7 +8,6 @@ import {
   getGetToolsIdResponseMock,
   getGetToolsMockHandler,
   getGetToolsResponseMock,
-  getGetUserToolsResponseMock,
 } from '../../api/default/default.msw'
 
 const server = setupServer(...getDefaultMock())
@@ -209,16 +207,22 @@ describe('getTools', () => {
         name: `Tool ${index + 1}`,
       }))
 
-    const userTools: UserTool[] = getGetUserToolsResponseMock()
-      .slice(0, 2)
-      .map((relation, index) => ({
-        ...relation,
-        user_id: index + 1,
-        tool_id: index + 1,
-        usage_frequency: index === 0 ? 'daily' : 'weekly',
-        proficiency_level: index === 0 ? 'advanced' : 'intermediate',
-        last_used: index === 0 ? '2024-01-01' : '2024-01-02',
-      }))
+    const userTools: UserTool[] = [
+      {
+        user_id: 1,
+        tool_id: 1,
+        usage_frequency: 'daily',
+        proficiency_level: 'advanced',
+        last_used: '2024-01-01',
+      },
+      {
+        user_id: 2,
+        tool_id: 2,
+        usage_frequency: 'weekly',
+        proficiency_level: 'intermediate',
+        last_used: '2024-01-02',
+      },
+    ]
 
     server.use(
       getGetToolsMockHandler((info) => {
@@ -226,14 +230,12 @@ describe('getTools', () => {
         const embed = url.searchParams.get('_embed')
 
         if (embed === 'user_tools') {
-          return tools.map(
-            (tool): ToolWithUserTools => ({
-              ...tool,
-              user_tools: userTools.filter(
-                (relation) => relation.tool_id === tool.id,
-              ),
-            }),
-          )
+          return tools.map((tool) => ({
+            ...tool,
+            user_tools: userTools.filter(
+              (relation) => relation.tool_id === tool.id,
+            ),
+          }))
         }
 
         return tools

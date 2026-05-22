@@ -1,0 +1,21 @@
+{
+  "budget_overview": {
+    "monthly_limit": 30000,
+    "current_month_total": 17928,
+    "previous_month_total": 17581,
+    "budget_utilization": "59.8",
+    "trend_percentage": "2.0"
+  },
+  "kpi_trends": {
+    "budget_change": "+2%",
+    "tools_change": "+9",
+    "departments_change": "+2",
+    "cost_per_user_change": "+€6"
+  },
+  "cost_analytics": {
+    "cost_per_user": 276,
+    "previous_cost_per_user": 270,
+    "active_users": 65,
+    "total_users": 66
+  }
+}

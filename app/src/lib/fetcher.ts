@@ -5,7 +5,10 @@ export const customFetcher = async <TResponse>(
   const baseUrl =
     import.meta.env.VITE_JSON_SERVER_URL ?? 'http://localhost:3000' // Default to localhost if the environment variable is not set
 
-  const res = await fetch(`${baseUrl}${url}`, {
+  const normalizedBaseUrl = baseUrl.replace(/\/+$/, '')
+  const normalizedPath = `/${url.replace(/^\/+/, '')}`
+
+  const res = await fetch(`${normalizedBaseUrl}${normalizedPath}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
