@@ -1,7 +1,7 @@
 describe('E2E tests', () => {
   beforeEach(() => {
     cy.intercept('GET', '**/analytics', { fixture: 'kpi.json' })
-    cy.intercept('GET', '**/tools?_sort=updated_at&_order=desc&_limit=1000', {
+    cy.intercept('GET', '**/tools', {
       fixture: 'tools.json',
     })
 

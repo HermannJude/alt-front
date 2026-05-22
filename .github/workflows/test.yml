@@ -50,3 +50,6 @@ jobs:
         uses: cypress-io/github-action@v7
         with:
           working-directory: app
+          build: pnpm build
+          start: pnpm dev
+          wait-on: "http://localhost:3000"
