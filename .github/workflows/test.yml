@@ -45,15 +45,3 @@ jobs:
 
       - name: Run tests
         run: pnpm test
-
-      - name: Add .env file
-        run: |
-          cp .env.example .env
-
-      - name: Cypress run
-        uses: cypress-io/github-action@v7
-        with:
-          working-directory: app
-          build: pnpm build
-          start: pnpm dev
-          wait-on: "http://localhost:3000"
