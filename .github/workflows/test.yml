@@ -48,7 +48,7 @@ jobs:
 
       - name: Add .env file
         run: |
-          cp app/.env.example app/.env
+          cp .env.example .env
 
       - name: Cypress run
         uses: cypress-io/github-action@v7
